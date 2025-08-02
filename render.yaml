@@ -1,12 +1,8 @@
 services:
   - type: web
     name: palonaai-food-recommendation
-    env: python
-    buildCommand: |
-      pip install -r requirements.txt
-      cd frontend && npm install
-      cd frontend && npm run build
-    startCommand: python start.py
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: OPENAI_API_KEY
         value: YOUR_OPENAI_API_KEY_HERE
