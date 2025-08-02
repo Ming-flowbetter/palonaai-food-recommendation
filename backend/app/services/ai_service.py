@@ -10,12 +10,18 @@ from app.core.config import settings
 
 class AIService:
     def __init__(self):
-        self.client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.chat_model = ChatOpenAI(
-            model_name="gpt-3.5-turbo",
-            temperature=0.7,
-            openai_api_key=settings.OPENAI_API_KEY
-        )
+        # 检查API密钥是否设置
+        if not settings.OPENAI_API_KEY or settings.OPENAI_API_KEY == "YOUR_OPENAI_API_KEY_HERE":
+            self.client = None
+            self.chat_model = None
+            print("Warning: OpenAI API key not set. AI features will be disabled.")
+        else:
+            self.client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+            self.chat_model = ChatOpenAI(
+                model_name="gpt-3.5-turbo",
+                temperature=0.7,
+                openai_api_key=settings.OPENAI_API_KEY
+            )
         
         # 系统提示词
         self.system_prompt = """你是一个专业的PalonaAI菜品推荐助手。你的任务是：
@@ -32,6 +38,14 @@ class AIService:
         """处理用户对话"""
         if not session_id:
             session_id = str(uuid.uuid4())
+        
+        # 检查AI服务是否可用
+        if not self.chat_model:
+            return {
+                "response": "欢迎使用PalonaAI菜品推荐！目前AI功能正在配置中，请稍后再试。您可以浏览我们的菜品目录。",
+                "recommendations": [],
+                "session_id": session_id
+            }
             
         # 构建上下文
         context = self._build_context(user_preferences)
