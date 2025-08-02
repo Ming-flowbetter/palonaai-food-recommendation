@@ -36,24 +36,42 @@ static_dir = "static"
 if not os.path.exists(static_dir):
     print(f"Warning: Static directory '{static_dir}' does not exist. Creating empty directory.")
     os.makedirs(static_dir, exist_ok=True)
+
+# 检查是否有index.html文件
+index_html_path = os.path.join(static_dir, "index.html")
+if not os.path.exists(index_html_path):
+    print(f"Warning: index.html not found in {static_dir}. Creating fallback.")
     # 创建一个简单的index.html作为fallback
-    with open(os.path.join(static_dir, "index.html"), "w", encoding="utf-8") as f:
+    with open(index_html_path, "w", encoding="utf-8") as f:
         f.write("""
 <!DOCTYPE html>
 <html>
 <head>
     <title>PalonaAI菜品推荐</title>
     <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        .api-link { display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; text-align: center; }
+        .api-link:hover { background: #0056b3; }
+    </style>
 </head>
 <body>
-    <h1>PalonaAI菜品推荐系统</h1>
-    <p>欢迎使用PalonaAI菜品推荐系统！</p>
-    <p>API文档: <a href="/docs">/docs</a></p>
-    <p>健康检查: <a href="/health">/health</a></p>
-    <p>菜单API: <a href="/api/menu">/api/menu</a></p>
+    <div class="container">
+        <h1>PalonaAI菜品推荐系统</h1>
+        <p style="text-align: center; color: #666;">欢迎使用PalonaAI菜品推荐系统！</p>
+        <a href="/docs" class="api-link">📚 API文档</a>
+        <a href="/health" class="api-link">❤️ 健康检查</a>
+        <a href="/api/menu" class="api-link">🍽️ 菜单API</a>
+        <p style="text-align: center; margin-top: 30px; color: #999;">
+            AI驱动的智能菜品推荐系统
+        </p>
+    </div>
 </body>
 </html>
         """)
+    print(f"Created fallback index.html at {index_html_path}")
 
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 

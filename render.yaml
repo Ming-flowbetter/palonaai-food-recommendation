@@ -4,7 +4,9 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
+      echo "Python dependencies installed"
       cd frontend && npm install
+      echo "Node dependencies installed"
       cd frontend && npm run build
       echo "Frontend build completed"
       ls -la frontend/build/
@@ -18,6 +20,8 @@ services:
       pwd
       echo "All files in current directory:"
       ls -la
+      echo "Testing if static files exist:"
+      test -f backend/static/index.html && echo "index.html exists" || echo "index.html missing"
     startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: OPENAI_API_KEY
