@@ -1,6 +1,6 @@
 import openai
 from langchain_community.llms import OpenAI
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.prompts import PromptTemplate
 from typing import List, Dict, Any, Optional
@@ -58,7 +58,7 @@ class AIService:
         
         try:
             # 获取AI回复
-            response = self.chat_model(messages)
+            response = self.chat_model.invoke(messages)
             
             # 解析回复，提取推荐信息
             recommendations = self._extract_recommendations(response.content)
@@ -128,7 +128,7 @@ class AIService:
         """
         
         try:
-            response = self.chat_model([HumanMessage(content=prompt)])
+            response = self.chat_model.invoke([HumanMessage(content=prompt)])
             return {
                 "recommendations": self._parse_recommendations(response.content),
                 "reasoning": response.content,
