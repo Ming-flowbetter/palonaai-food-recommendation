@@ -30,22 +30,7 @@ app.add_middleware(
 # 包含API路由
 app.include_router(api_router, prefix="/api")
 
-# 挂载静态文件（用于前端构建文件）
-# 注意：在生产环境中，前端文件应该被构建并复制到后端目录
-print("Setting up static files...")
-static_dir = "static"
-
-# 确保static目录存在
-if not os.path.exists(static_dir):
-    print(f"Creating static directory: {static_dir}")
-    os.makedirs(static_dir, exist_ok=True)
-else:
-    print(f"Static directory already exists: {static_dir}")
-
-# 强制创建index.html文件
-index_html_path = os.path.join(static_dir, "index.html")
-print(f"Creating index.html at {index_html_path}")
-
+# 定义主页HTML内容
 html_content = """<!DOCTYPE html>
 <html>
 <head>
@@ -73,25 +58,11 @@ html_content = """<!DOCTYPE html>
 </body>
 </html>"""
 
-try:
-    with open(index_html_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
-    print(f"Successfully created index.html at {index_html_path}")
-except Exception as e:
-    print(f"Error creating index.html: {e}")
+from fastapi.responses import HTMLResponse
 
-# 验证文件是否存在
-print(f"Static directory contents: {os.listdir(static_dir) if os.path.exists(static_dir) else 'Directory does not exist'}")
-print(f"Index.html exists: {os.path.exists(index_html_path)}")
-
-# 挂载静态文件
-print(f"Mounting static files from directory: {static_dir}")
-app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
-print("Static files mounted successfully")
-
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    return {"message": "欢迎使用AI餐厅推荐系统"}
+    return html_content
 
 @app.get("/health")
 async def health_check():
