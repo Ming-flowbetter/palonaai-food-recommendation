@@ -6,6 +6,8 @@ services:
       pip install -r requirements.txt
       cd frontend && npm install
       cd frontend && npm run build
+      mkdir -p backend/static
+      cp -r frontend/build/* backend/static/
     startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: OPENAI_API_KEY
