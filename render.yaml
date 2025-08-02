@@ -22,6 +22,41 @@ services:
       ls -la
       echo "Testing if static files exist:"
       test -f backend/static/index.html && echo "index.html exists" || echo "index.html missing"
+      echo "Creating fallback index.html if needed:"
+      if [ ! -f backend/static/index.html ]; then
+        echo "Creating fallback index.html"
+        cat > backend/static/index.html << 'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PalonaAI菜品推荐</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        .api-link { display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; text-align: center; }
+        .api-link:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PalonaAI菜品推荐系统</h1>
+        <p style="text-align: center; color: #666;">欢迎使用PalonaAI菜品推荐系统！</p>
+        <a href="/docs" class="api-link">📚 API文档</a>
+        <a href="/health" class="api-link">❤️ 健康检查</a>
+        <a href="/api/menu" class="api-link">🍽️ 菜单API</a>
+        <p style="text-align: center; margin-top: 30px; color: #999;">
+            AI驱动的智能菜品推荐系统
+        </p>
+    </div>
+</body>
+</html>
+EOF
+        echo "Fallback index.html created"
+      fi
+      echo "Final static directory contents:"
+      ls -la backend/static/
     startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: OPENAI_API_KEY
