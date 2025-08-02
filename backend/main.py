@@ -73,6 +73,10 @@ if not os.path.exists(index_html_path):
         """)
     print(f"Created fallback index.html at {index_html_path}")
 
+# 确保静态文件存在
+print(f"Static directory contents: {os.listdir(static_dir) if os.path.exists(static_dir) else 'Directory does not exist'}")
+print(f"Index.html exists: {os.path.exists(index_html_path)}")
+
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
 @app.get("/")
