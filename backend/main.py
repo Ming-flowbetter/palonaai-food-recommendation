@@ -32,7 +32,11 @@ app.include_router(api_router, prefix="/api")
 
 # 挂载静态文件（用于前端构建文件）
 # 注意：在生产环境中，前端文件应该被构建并复制到后端目录
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+static_dir = "static"
+if not os.path.exists(static_dir):
+    print(f"Warning: Static directory '{static_dir}' does not exist. Creating empty directory.")
+    os.makedirs(static_dir, exist_ok=True)
+app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
 @app.get("/")
 async def root():
