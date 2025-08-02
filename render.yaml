@@ -6,7 +6,6 @@ services:
       pip install -r requirements.txt
       cd frontend && npm install
       cd frontend && npm run build
-    startCommand: chmod +x render_start.sh && ./render_start.sh
     envVars:
       - key: OPENAI_API_KEY
         value: YOUR_OPENAI_API_KEY_HERE
