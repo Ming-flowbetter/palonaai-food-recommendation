@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  ai-restaurant-app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_ENVIRONMENT=${PINECONE_ENVIRONMENT}
+      - PINECONE_INDEX_NAME=${PINECONE_INDEX_NAME}
+      - APP_NAME=AI餐厅推荐系统
+      - DEBUG=False
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped 

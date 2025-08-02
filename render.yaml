@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: palonaai-food-recommendation
+    env: python
+    buildCommand: |
+      pip install -r backend/requirements.txt
+      cd frontend && npm install && npm run build
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        value: YOUR_OPENAI_API_KEY_HERE
+      - key: PINECONE_API_KEY
+        value: YOUR_PINECONE_API_KEY_HERE
+      - key: PINECONE_ENVIRONMENT
+        value: us-east-1
+      - key: PINECONE_INDEX_NAME
+        value: foodaiagent
+      - key: APP_NAME
+        value: PalonaAI菜品推荐
+      - key: DEBUG
+        value: False 
