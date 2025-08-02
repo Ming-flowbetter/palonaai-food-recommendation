@@ -6,7 +6,7 @@ services:
       pip install -r requirements.txt
       cd frontend && npm install
       cd frontend && npm run build
-    startCommand: uvicorn wsgi:application --host 0.0.0.0 --port $PORT
+    startCommand: chmod +x render_start.sh && ./render_start.sh
     envVars:
       - key: OPENAI_API_KEY
         value: YOUR_OPENAI_API_KEY_HERE
