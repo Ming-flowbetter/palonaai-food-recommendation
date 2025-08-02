@@ -37,13 +37,11 @@ if not os.path.exists(static_dir):
     print(f"Warning: Static directory '{static_dir}' does not exist. Creating empty directory.")
     os.makedirs(static_dir, exist_ok=True)
 
-# 检查是否有index.html文件
+# 强制创建index.html文件
 index_html_path = os.path.join(static_dir, "index.html")
-if not os.path.exists(index_html_path):
-    print(f"Warning: index.html not found in {static_dir}. Creating fallback.")
-    # 创建一个简单的index.html作为fallback
-    with open(index_html_path, "w", encoding="utf-8") as f:
-        f.write("""
+print(f"Creating index.html at {index_html_path}")
+with open(index_html_path, "w", encoding="utf-8") as f:
+    f.write("""
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,8 +68,8 @@ if not os.path.exists(index_html_path):
     </div>
 </body>
 </html>
-        """)
-    print(f"Created fallback index.html at {index_html_path}")
+    """)
+print(f"Created index.html at {index_html_path}")
 
 # 确保静态文件存在
 print(f"Static directory contents: {os.listdir(static_dir) if os.path.exists(static_dir) else 'Directory does not exist'}")
