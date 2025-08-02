@@ -36,6 +36,25 @@ static_dir = "static"
 if not os.path.exists(static_dir):
     print(f"Warning: Static directory '{static_dir}' does not exist. Creating empty directory.")
     os.makedirs(static_dir, exist_ok=True)
+    # 创建一个简单的index.html作为fallback
+    with open(os.path.join(static_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write("""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PalonaAI菜品推荐</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>PalonaAI菜品推荐系统</h1>
+    <p>欢迎使用PalonaAI菜品推荐系统！</p>
+    <p>API文档: <a href="/docs">/docs</a></p>
+    <p>健康检查: <a href="/health">/health</a></p>
+    <p>菜单API: <a href="/api/menu">/api/menu</a></p>
+</body>
+</html>
+        """)
+
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
 @app.get("/")
