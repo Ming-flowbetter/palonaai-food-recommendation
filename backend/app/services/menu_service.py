@@ -19,7 +19,7 @@ class MenuService:
                 "category": "川菜",
                 "ingredients": ["鸡胸肉", "花生", "干辣椒", "葱姜蒜", "生抽", "老抽", "糖", "醋"],
                 "allergens": ["花生"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.8
             },
@@ -31,7 +31,7 @@ class MenuService:
                 "category": "川菜",
                 "ingredients": ["嫩豆腐", "猪肉末", "郫县豆瓣酱", "花椒", "辣椒", "蒜末", "葱花"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.6
             },
@@ -43,7 +43,7 @@ class MenuService:
                 "category": "川菜",
                 "ingredients": ["草鱼", "豆芽", "辣椒", "花椒", "蒜末", "葱花", "香菜"],
                 "allergens": ["鱼类"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.7
             },
@@ -55,7 +55,7 @@ class MenuService:
                 "category": "川菜",
                 "ingredients": ["五花肉", "青椒", "蒜苗", "豆瓣酱", "生抽", "老抽"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.5
             },
@@ -69,7 +69,7 @@ class MenuService:
                 "category": "粤菜",
                 "ingredients": ["鲈鱼", "姜丝", "葱丝", "蒸鱼豉油", "料酒", "盐"],
                 "allergens": ["鱼类"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": True,
                 "rating": 4.9
             },
@@ -81,7 +81,7 @@ class MenuService:
                 "category": "粤菜",
                 "ingredients": ["三黄鸡", "姜丝", "葱丝", "生抽", "香油", "盐"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.7
             },
@@ -93,7 +93,7 @@ class MenuService:
                 "category": "粤菜",
                 "ingredients": ["五花肉", "叉烧酱", "蜂蜜", "生抽", "老抽", "料酒"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.6
             },
@@ -105,7 +105,7 @@ class MenuService:
                 "category": "粤菜",
                 "ingredients": ["虾仁", "鸡蛋", "葱花", "盐", "料酒", "生抽"],
                 "allergens": ["虾类", "鸡蛋"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.4
             },
@@ -119,7 +119,7 @@ class MenuService:
                 "category": "鲁菜",
                 "ingredients": ["里脊肉", "淀粉", "糖", "醋", "番茄酱", "生抽"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.8
             },
@@ -131,7 +131,7 @@ class MenuService:
                 "category": "鲁菜",
                 "ingredients": ["猪大肠", "葱姜蒜", "八角", "桂皮", "生抽", "老抽"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.3
             },
@@ -145,7 +145,7 @@ class MenuService:
                 "category": "本帮菜",
                 "ingredients": ["五花肉", "酱油", "糖", "料酒", "葱姜蒜", "八角"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.9
             },
@@ -157,7 +157,7 @@ class MenuService:
                 "category": "点心",
                 "ingredients": ["猪肉", "面粉", "姜汁", "高汤", "葱花", "盐"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.7
             },
@@ -169,7 +169,7 @@ class MenuService:
                 "category": "点心",
                 "ingredients": ["猪肉", "面粉", "葱花", "盐", "生抽", "料酒"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.6
             },
@@ -183,7 +183,7 @@ class MenuService:
                 "category": "京菜",
                 "ingredients": ["北京填鸭", "甜面酱", "葱丝", "薄饼", "黄瓜丝"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.9
             },
@@ -195,7 +195,7 @@ class MenuService:
                 "category": "面食",
                 "ingredients": ["手工面条", "炸酱", "黄瓜丝", "豆芽", "葱花"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.5
             },
@@ -209,7 +209,7 @@ class MenuService:
                 "category": "湘菜",
                 "ingredients": ["鱼头", "剁椒", "蒜末", "姜丝", "葱花", "生抽"],
                 "allergens": ["鱼类"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.7
             },
@@ -221,7 +221,7 @@ class MenuService:
                 "category": "湘菜",
                 "ingredients": ["五花肉", "青椒", "蒜苗", "辣椒", "生抽", "老抽"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.6
             },
@@ -235,7 +235,7 @@ class MenuService:
                 "category": "苏菜",
                 "ingredients": ["桂鱼", "淀粉", "糖", "醋", "番茄酱", "生抽"],
                 "allergens": ["鱼类"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.8
             },
@@ -247,7 +247,7 @@ class MenuService:
                 "category": "素菜",
                 "ingredients": ["时令蔬菜", "蒜末", "盐", "生抽", "香油"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": True,
                 "rating": 4.3
             },
@@ -261,7 +261,7 @@ class MenuService:
                 "category": "汤品",
                 "ingredients": ["鱼片", "酸菜", "辣椒", "蒜末", "葱花", "香菜"],
                 "allergens": ["鱼类"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.6
             },
@@ -273,7 +273,7 @@ class MenuService:
                 "category": "汤品",
                 "ingredients": ["紫菜", "鸡蛋", "葱花", "盐", "香油"],
                 "allergens": ["鸡蛋"],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.2
             },
@@ -287,7 +287,7 @@ class MenuService:
                 "category": "甜点",
                 "ingredients": ["糯米粉", "红豆沙", "糖", "水"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": False,
                 "rating": 4.5
             },
@@ -299,7 +299,7 @@ class MenuService:
                 "category": "甜点",
                 "ingredients": ["芒果", "西米露", "椰奶", "糖", "水"],
                 "allergens": [],
-                "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop&crop=entropy",
                 "is_seasonal": True,
                 "rating": 4.7
             }
