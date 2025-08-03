@@ -11,6 +11,8 @@ services:
       ls -la
       echo "Checking if frontend directory exists:"
       ls -la frontend/
+      echo "Checking frontend package.json:"
+      cat frontend/package.json
       echo "Installing Node.js dependencies..."
       cd frontend && npm install
       echo "Building React frontend..."
@@ -20,6 +22,8 @@ services:
       ls -la build/
       echo "Checking if index.html exists in build:"
       ls -la build/index.html
+      echo "Checking index.html content (first 10 lines):"
+      head -10 build/index.html
       cd ..
       echo "Creating backend/static directory..."
       mkdir -p backend/static
@@ -30,6 +34,8 @@ services:
       ls -la backend/static/
       echo "Checking if index.html exists in backend/static:"
       ls -la backend/static/index.html
+      echo "Checking backend/static/index.html content (first 10 lines):"
+      head -10 backend/static/index.html
       echo "Backend directory contents:"
       ls -la backend/
     startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
