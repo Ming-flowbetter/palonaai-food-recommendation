@@ -14,7 +14,7 @@ class AIService:
         if not settings.OPENAI_API_KEY or settings.OPENAI_API_KEY == "YOUR_OPENAI_API_KEY_HERE":
             self.client = None
             self.chat_model = None
-            print("Warning: OpenAI API key not set. AI features will be disabled.")
+            print("Warning: OpenAI API key not set. Using fallback AI responses.")
         else:
             self.client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
             self.chat_model = ChatOpenAI(
@@ -41,8 +41,10 @@ class AIService:
         
         # 检查AI服务是否可用
         if not self.chat_model:
+            # 使用智能fallback回复
+            fallback_response = self._get_fallback_response(message)
             return {
-                "response": "欢迎使用PalonaAI菜品推荐！目前AI功能正在配置中，请稍后再试。您可以浏览我们的菜品目录。",
+                "response": fallback_response,
                 "recommendations": [],
                 "session_id": session_id
             }
@@ -152,4 +154,33 @@ class AIService:
                 "rating": 8.5,
                 "reason": "基于您的偏好推荐"
             }
-        ] 
+        ]
+
+    def _get_fallback_response(self, message: str) -> str:
+        """智能fallback回复"""
+        message_lower = message.lower()
+        
+        # 关键词匹配
+        if any(word in message_lower for word in ['你好', 'hi', 'hello']):
+            return "你好！欢迎使用PalonaAI菜品推荐系统！我是您的智能菜品助手，可以帮您推荐最适合的菜品。请告诉我您喜欢什么口味或者有什么特殊需求？"
+        
+        elif any(word in message_lower for word in ['中餐', '中国菜', '川菜', '粤菜']):
+            return "中餐是个很棒的选择！我推荐您尝试：1. 麻婆豆腐 - 麻辣鲜香，2. 宫保鸡丁 - 经典川菜，3. 白切鸡 - 清淡鲜美。您更喜欢哪种口味？"
+        
+        elif any(word in message_lower for word in ['西餐', '意大利', 'pizza', 'pasta']):
+            return "西餐很有情调！我推荐：1. 意大利面 - 经典美味，2. 披萨 - 多种口味，3. 牛排 - 鲜嫩多汁。您想要什么风格？"
+        
+        elif any(word in message_lower for word in ['日料', '日本', '寿司', '刺身']):
+            return "日料很精致！推荐：1. 三文鱼刺身 - 新鲜美味，2. 天妇罗 - 酥脆可口，3. 拉面 - 温暖舒适。您喜欢生食还是熟食？"
+        
+        elif any(word in message_lower for word in ['辣', '麻辣', '重口味']):
+            return "喜欢重口味！推荐：1. 水煮鱼 - 麻辣鲜香，2. 辣子鸡 - 香辣可口，3. 麻婆豆腐 - 经典川菜。您能接受多辣？"
+        
+        elif any(word in message_lower for word in ['清淡', '不辣', '养生']):
+            return "清淡养生很好！推荐：1. 白切鸡 - 清淡鲜美，2. 蒸蛋羹 - 营养丰富，3. 清炒时蔬 - 健康美味。您有什么忌口吗？"
+        
+        elif any(word in message_lower for word in ['推荐', '建议', '吃什么']):
+            return "根据当前季节，我推荐：1. 当季新鲜蔬菜 - 营养丰富，2. 温补汤品 - 养生保健，3. 应季水果 - 补充维生素。您有什么特别偏好吗？"
+        
+        else:
+            return "感谢您的咨询！我是PalonaAI菜品推荐助手，可以为您推荐最适合的菜品。请告诉我您的口味偏好、饮食限制或者想要尝试的菜系，我会为您提供个性化推荐！" 
