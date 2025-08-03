@@ -41,6 +41,55 @@ if not os.path.exists(static_dir):
 else:
     print(f"Static directory already exists: {static_dir}")
 
+# 创建测试index.html文件
+test_html_path = os.path.join(static_dir, "index.html")
+print(f"Creating test index.html at {test_html_path}")
+
+test_html_content = """<!DOCTYPE html>
+<html>
+<head>
+    <title>PalonaAI菜品推荐 - 测试页面</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        .api-link { display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; text-align: center; }
+        .api-link:hover { background: #0056b3; }
+        .status { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PalonaAI菜品推荐系统</h1>
+        <div class="status">
+            ✅ 静态文件服务正常工作！<br>
+            ✅ AI聊天功能可用<br>
+            ✅ API文档可访问
+        </div>
+        <p style="text-align: center; color: #666;">欢迎使用PalonaAI菜品推荐系统！</p>
+        <a href="/docs" class="api-link">📚 API文档</a>
+        <a href="/health" class="api-link">❤️ 健康检查</a>
+        <a href="/api/menu" class="api-link">🍽️ 菜单API</a>
+        <a href="/api/chat" class="api-link">🤖 AI聊天测试</a>
+        <p style="text-align: center; margin-top: 30px; color: #999;">
+            AI驱动的智能菜品推荐系统
+        </p>
+    </div>
+</body>
+</html>"""
+
+try:
+    with open(test_html_path, "w", encoding="utf-8") as f:
+        f.write(test_html_content)
+    print(f"Successfully created test index.html at {test_html_path}")
+except Exception as e:
+    print(f"Error creating test index.html: {e}")
+
+# 验证文件是否存在
+print(f"Static directory contents: {os.listdir(static_dir) if os.path.exists(static_dir) else 'Directory does not exist'}")
+print(f"Test index.html exists: {os.path.exists(test_html_path)}")
+
 # 挂载静态文件
 print(f"Mounting static files from directory: {static_dir}")
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
