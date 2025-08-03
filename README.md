@@ -6,7 +6,7 @@
 
 **访问地址**: [https://palonaai-food-recommendation.onrender.com/](https://palonaai-food-recommendation.onrender.com/)
 
-体验完整的AI菜品推荐功能，包括智能对话、菜单浏览、搜索筛选等。
+体验完整的AI菜品推荐功能，包括智能对话、菜单浏览、搜索筛选等。（由于免费版本Render限制，首次加载可能需要1分钟）
 
 ## 功能特性
 
@@ -104,17 +104,28 @@ hw-ai-agent/
 │   │   ├── core/
 │   │   ├── models/
 │   │   └── services/
+│   ├── static/          # React构建文件
 │   ├── requirements.txt
-│   └── main.py
+│   ├── main.py
+│   └── env.example
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
 │   │   └── services/
+│   ├── public/
+│   ├── build/           # 构建输出
 │   ├── package.json
-│   └── public/
-├── README.md
-└── docker-compose.yml
+│   ├── tsconfig.json
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+├── render.yaml          # Render部署配置
+├── Dockerfile           # Docker配置
+├── docker-compose.yml   # Docker Compose配置
+├── requirements.txt     # 根目录依赖
+├── .gitignore
+├── .dockerignore
+└── README.md
 ```
 
 ## 许可证
