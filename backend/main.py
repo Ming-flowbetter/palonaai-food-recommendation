@@ -41,52 +41,12 @@ if not os.path.exists(static_dir):
 else:
     print(f"Static directory already exists: {static_dir}")
 
-# 检查是否有React构建文件
+# 检查React构建文件
 index_html_path = os.path.join(static_dir, "index.html")
-if not os.path.exists(index_html_path):
-    print("React build not found, creating fallback index.html")
-    fallback_html = """<!DOCTYPE html>
-<html>
-<head>
-    <title>PalonaAI菜品推荐系统</title>
-    <meta charset="utf-8">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; }
-        .api-link { display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; text-align: center; }
-        .api-link:hover { background: #0056b3; }
-        .status { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin: 20px 0; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>PalonaAI菜品推荐系统</h1>
-        <div class="status">
-            ✅ 后端服务正常运行！<br>
-            ✅ AI聊天功能可用<br>
-            ✅ API文档可访问
-        </div>
-        <p style="text-align: center; color: #666;">欢迎使用PalonaAI菜品推荐系统！</p>
-        <a href="/docs" class="api-link">📚 API文档</a>
-        <a href="/health" class="api-link">❤️ 健康检查</a>
-        <a href="/api/menu" class="api-link">🍽️ 菜单API</a>
-        <a href="/api/chat" class="api-link">🤖 AI聊天测试</a>
-        <p style="text-align: center; margin-top: 30px; color: #999;">
-            AI驱动的智能菜品推荐系统
-        </p>
-    </div>
-</body>
-</html>"""
-    
-    try:
-        with open(index_html_path, "w", encoding="utf-8") as f:
-            f.write(fallback_html)
-        print(f"Successfully created fallback index.html at {index_html_path}")
-    except Exception as e:
-        print(f"Error creating fallback index.html: {e}")
-else:
+if os.path.exists(index_html_path):
     print(f"React build found at {index_html_path}")
+else:
+    print("React build not found")
 
 # 挂载静态文件
 print(f"Mounting static files from directory: {static_dir}")
