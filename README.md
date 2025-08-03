@@ -11,10 +11,15 @@
 ## 功能特性
 
 -  **智能对话推荐**: 基于用户偏好的个性化菜品推荐
+-  **意图识别**: 自动识别用户消息意图（推荐、信息、比较等）
+-  **情感分析**: 分析用户情感状态，提供更贴心的回复
+-  **实体提取**: 从对话中提取关键信息（菜系、口味、预算等）
 -  **丰富菜品菜单**: 包含经典中餐菜品，涵盖川菜、粤菜、鲁菜等八大菜系
 -  **可搜索产品目录**: 快速查找和筛选菜品
 -  **自然语言交互**: 支持中文对话，理解用户需求
 -  **个性化体验**: 根据用户喜好和餐厅偏好进行推荐
+-  **用户反馈系统**: 支持用户对AI回复进行评分
+-  **对话指标监控**: 实时监控对话质量和用户满意度
 
 ## 技术栈
 
@@ -89,7 +94,12 @@ https://palonaai-food-recommendation.onrender.com/docs 线上API文档
 
 ### 主要API端点
 
-- `POST /api/chat`: 与AI助手对话
+- `POST /api/chat`: 与AI助手对话（增强版，支持意图和情感分析）
+- `POST /api/analyze-intent`: 分析用户意图
+- `POST /api/analyze-emotion`: 分析用户情感
+- `POST /api/extract-entities`: 提取实体信息
+- `POST /api/feedback`: 提交用户反馈
+- `GET /api/conversation-metrics/{session_id}`: 获取对话指标
 - `GET /api/menu`: 获取菜单信息
 - `POST /api/search`: 搜索菜品
 - `GET /health`: 健康检查
@@ -127,6 +137,10 @@ hw-ai-agent/
 ├── .dockerignore
 └── README.md
 ```
+后续开发方向
+1. 增强AI对话能力
+2. 添加工具和代理
+3. 实现向量数据库集成
 
 ## 许可证
 

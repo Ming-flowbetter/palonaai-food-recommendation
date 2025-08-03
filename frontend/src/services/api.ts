@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// 聊天API
+// 聊天API（增强版）
 export const chatWithAI = async (message: string, sessionId?: string) => {
   try {
     const response = await api.post('/api/chat', {
@@ -20,6 +20,89 @@ export const chatWithAI = async (message: string, sessionId?: string) => {
     return response.data;
   } catch (error) {
     console.error('聊天API错误:', error);
+    throw error;
+  }
+};
+
+// 分析用户意图
+export const analyzeIntent = async (message: string) => {
+  try {
+    const response = await api.post('/api/analyze-intent', { message });
+    return response.data;
+  } catch (error) {
+    console.error('意图分析错误:', error);
+    throw error;
+  }
+};
+
+// 分析用户情感
+export const analyzeEmotion = async (message: string) => {
+  try {
+    const response = await api.post('/api/analyze-emotion', { message });
+    return response.data;
+  } catch (error) {
+    console.error('情感分析错误:', error);
+    throw error;
+  }
+};
+
+// 提取实体信息
+export const extractEntities = async (message: string) => {
+  try {
+    const response = await api.post('/api/extract-entities', { message });
+    return response.data;
+  } catch (error) {
+    console.error('实体提取错误:', error);
+    throw error;
+  }
+};
+
+// 提交用户反馈
+export const submitFeedback = async (feedback: {
+  session_id: string;
+  message_id: string;
+  rating: number;
+  feedback_type: string;
+  comment?: string;
+}) => {
+  try {
+    const response = await api.post('/api/feedback', feedback);
+    return response.data;
+  } catch (error) {
+    console.error('提交反馈错误:', error);
+    throw error;
+  }
+};
+
+// 获取对话指标
+export const getConversationMetrics = async (sessionId: string) => {
+  try {
+    const response = await api.get(`/api/conversation-metrics/${sessionId}`);
+    return response.data;
+  } catch (error) {
+    console.error('获取对话指标错误:', error);
+    throw error;
+  }
+};
+
+// 获取会话信息（增强版）
+export const getSessionInfo = async (sessionId: string) => {
+  try {
+    const response = await api.get(`/api/session/${sessionId}`);
+    return response.data;
+  } catch (error) {
+    console.error('获取会话信息错误:', error);
+    throw error;
+  }
+};
+
+// 清除会话
+export const clearSession = async (sessionId: string) => {
+  try {
+    const response = await api.delete(`/api/session/${sessionId}`);
+    return response.data;
+  } catch (error) {
+    console.error('清除会话错误:', error);
     throw error;
   }
 };
@@ -94,7 +177,7 @@ export const getPopularItems = async (limit: number = 5) => {
   }
 };
 
-// 获取推荐
+// 获取推荐（增强版）
 export const getRecommendations = async (userPreferences: any) => {
   try {
     const response = await api.post('/api/recommendations', {
