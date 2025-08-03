@@ -5,12 +5,19 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       echo "Python dependencies installed"
-      mkdir -p backend/static
-      echo "Static directory created"
+      echo "Installing Node.js dependencies..."
+      cd frontend && npm install
+      echo "Building React frontend..."
+      npm run build
+      echo "React build completed"
+      cd ..
+      echo "Copying React build to backend/static..."
+      cp -r frontend/build/* backend/static/
+      echo "Static files copied successfully"
       echo "Current working directory:"
       pwd
-      echo "All files in current directory:"
-      ls -la
+      echo "Backend static directory contents:"
+      ls -la backend/static/
     startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: OPENAI_API_KEY

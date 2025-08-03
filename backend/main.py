@@ -30,39 +30,21 @@ app.add_middleware(
 # 包含API路由
 app.include_router(api_router, prefix="/api")
 
-# 定义主页HTML内容
-html_content = """<!DOCTYPE html>
-<html>
-<head>
-    <title>PalonaAI菜品推荐</title>
-    <meta charset="utf-8">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; }
-        .api-link { display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; text-align: center; }
-        .api-link:hover { background: #0056b3; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>PalonaAI菜品推荐系统</h1>
-        <p style="text-align: center; color: #666;">欢迎使用PalonaAI菜品推荐系统！</p>
-        <a href="/docs" class="api-link">📚 API文档</a>
-        <a href="/health" class="api-link">❤️ 健康检查</a>
-        <a href="/api/menu" class="api-link">🍽️ 菜单API</a>
-        <p style="text-align: center; margin-top: 30px; color: #999;">
-            AI驱动的智能菜品推荐系统
-        </p>
-    </div>
-</body>
-</html>"""
+# 挂载静态文件（React前端）
+print("Setting up static files for React frontend...")
+static_dir = "static"
 
-from fastapi.responses import HTMLResponse
+# 确保static目录存在
+if not os.path.exists(static_dir):
+    print(f"Creating static directory: {static_dir}")
+    os.makedirs(static_dir, exist_ok=True)
+else:
+    print(f"Static directory already exists: {static_dir}")
 
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    return html_content
+# 挂载静态文件
+print(f"Mounting static files from directory: {static_dir}")
+app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+print("Static files mounted successfully")
 
 @app.get("/health")
 async def health_check():
