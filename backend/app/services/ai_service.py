@@ -300,15 +300,6 @@ class AIService:
         if preferences:
             context += f"\n\n用户偏好信息：{json.dumps(preferences, ensure_ascii=False)}"
         
-        # 添加对话历史摘要
-        history = session.get("conversation_history", [])
-        if history:
-            context += f"\n\n对话历史摘要（最近{min(5, len(history)//2)}轮对话）：\n"
-            recent_history = history[-10:]  # 最近10条消息
-            for msg in recent_history:
-                role = "用户" if msg["role"] == "user" else "助手"
-                context += f"- {role}: {msg['content'][:100]}{'...' if len(msg['content']) > 100 else ''}\n"
-        
         # 添加意图历史
         intent_history = session.get("intent_history", [])
         if intent_history:
@@ -320,14 +311,6 @@ class AIService:
         if emotion_history:
             recent_emotions = emotion_history[-5:]  # 最近5个情感
             context += f"\n\n最近的情感状态：{recent_emotions}"
-        
-        # 添加对话历史摘要（最近3轮）
-        history = session.get("conversation_history", [])
-        if len(history) > 0:
-            recent_history = history[-6:]  # 最近3轮对话（6条消息）
-            context += "\n\n最近的对话历史："
-            for msg in recent_history:
-                context += f"\n{msg['role']}: {msg['content']}"
         
         return context
 
@@ -385,7 +368,7 @@ class AIService:
             # 获取AI回复
             response = self.chat_model.invoke(messages)
             
-            # 更新对话历史
+            # 更新对话历史 - 先添加用户消息
             session["conversation_history"].append({
                 "role": "user",
                 "content": message,
@@ -394,13 +377,15 @@ class AIService:
                 "emotion_scores": emotion_scores,
                 "entities": entities
             })
+            
+            # 再添加AI回复
             session["conversation_history"].append({
                 "role": "assistant",
                 "content": response.content,
                 "timestamp": datetime.now().isoformat()
             })
             
-                        # 更新用户偏好
+            # 更新用户偏好
             self._update_user_preferences(session_id, message, response.content, entities)
             
             # 保存会话数据
@@ -731,9 +716,49 @@ class AIService:
                 "last_activity": session.get("last_activity").isoformat(),
                 "conversation_length": len(session.get("conversation_history", [])),
                 "interaction_count": session.get("interaction_count", 0),
-                "user_preferences": session.get("user_preferences", {})
+                "user_preferences": session.get("user_preferences", {}),
+                "conversation_history": session.get("conversation_history", []),
+                "intent_history": session.get("intent_history", []),
+                "emotion_history": session.get("emotion_history", [])
             }
         return {}
+
+    def debug_session(self, session_id: str) -> str:
+        """调试会话状态"""
+        if session_id not in self.user_sessions:
+            return f"会话 {session_id} 不存在"
+        
+        session = self.user_sessions[session_id]
+        history = session.get("conversation_history", [])
+        
+        debug_info = f"""
+=== 会话调试信息 ===
+会话ID: {session_id}
+创建时间: {session.get("created_at")}
+最后活动: {session.get("last_activity")}
+交互次数: {session.get("interaction_count", 0)}
+对话历史长度: {len(history)}
+
+=== 对话历史 ===
+"""
+        
+        for i, msg in enumerate(history):
+            role = "用户" if msg["role"] == "user" else "AI"
+            content = msg["content"][:100] + "..." if len(msg["content"]) > 100 else msg["content"]
+            debug_info += f"{i+1}. {role}: {content}\n"
+        
+        debug_info += f"""
+=== 用户偏好 ===
+{json.dumps(session.get("user_preferences", {}), ensure_ascii=False, indent=2)}
+
+=== 意图历史 ===
+{json.dumps(session.get("intent_history", [])[-5:], ensure_ascii=False, indent=2)}
+
+=== 情感历史 ===
+{json.dumps(session.get("emotion_history", [])[-5:], ensure_ascii=False, indent=2)}
+"""
+        
+        return debug_info
 
     def clear_session(self, session_id: str) -> bool:
         """清除会话"""
