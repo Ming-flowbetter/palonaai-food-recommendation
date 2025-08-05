@@ -9,8 +9,11 @@ from typing import List, Dict, Any, Optional
 import json
 import uuid
 import re
+import os
+import pickle
 from datetime import datetime, timedelta
 from app.core.config import settings
+from app.services.menu_service import MenuService
 
 class AIService:
     def __init__(self):
@@ -27,8 +30,14 @@ class AIService:
                 openai_api_key=settings.OPENAI_API_KEY
             )
         
-        # 用户会话存储 - 在生产环境中应该使用数据库
-        self.user_sessions: Dict[str, Dict[str, Any]] = {}
+        # 初始化菜单服务
+        self.menu_service = MenuService()
+        
+        # 会话存储文件路径
+        self.sessions_file = "user_sessions.pkl"
+        
+        # 加载持久化的用户会话
+        self.user_sessions: Dict[str, Dict[str, Any]] = self._load_sessions()
         
         # 意图识别关键词
         self.intent_keywords = {
@@ -55,7 +64,7 @@ class AIService:
         self.system_prompt = """你是一个专业的PalonaAI菜品推荐助手。你的任务是：
 
 1. 理解用户的需求和偏好
-2. 根据用户的喜好推荐合适的菜品
+2. 根据用户的喜好推荐我们菜单中的具体菜品
 3. 考虑季节性因素和营养健康
 4. 提供个性化的建议和详细说明
 5. 回答用户关于菜品的问题
@@ -63,13 +72,40 @@ class AIService:
 7. 识别用户的意图和情感状态
 8. 提供多角度的推荐理由
 
+重要：你只能推荐我们菜单中实际存在的菜品。在推荐时，请：
+- 明确说明这是菜单中的菜品
+- 提供具体的菜品名称、价格和特点
+- 考虑用户的口味偏好和饮食限制
+- 可以推荐多个菜品供用户选择
+
 请用中文回复，保持友好和专业的语气。记住用户的偏好，在后续对话中提供更个性化的建议。
 
 回复格式要求：
 - 保持对话的自然流畅
-- 提供具体的菜品推荐和理由
+- 提供具体的菜单菜品推荐和理由
 - 考虑用户的健康需求和饮食限制
 - 适时询问更多信息以提供更精准的推荐"""
+
+    def _load_sessions(self) -> Dict[str, Dict[str, Any]]:
+        """从文件加载会话数据"""
+        try:
+            if os.path.exists(self.sessions_file):
+                with open(self.sessions_file, 'rb') as f:
+                    sessions = pickle.load(f)
+                print(f"已加载 {len(sessions)} 个会话")
+                return sessions
+        except Exception as e:
+            print(f"加载会话数据失败: {e}")
+        return {}
+
+    def _save_sessions(self):
+        """保存会话数据到文件"""
+        try:
+            with open(self.sessions_file, 'wb') as f:
+                pickle.dump(self.user_sessions, f)
+            print(f"已保存 {len(self.user_sessions)} 个会话")
+        except Exception as e:
+            print(f"保存会话数据失败: {e}")
 
     def _detect_intent(self, message: str) -> Dict[str, float]:
         """检测用户意图"""
@@ -140,7 +176,7 @@ class AIService:
             "gluten_free": ["无麸质", "麸质过敏"],
             "dairy_free": ["无乳糖", "乳糖不耐"],
             "nut_free": ["坚果过敏", "不吃坚果"],
-            "seafood_free": ["海鲜过敏", "不吃海鲜"]
+            "seafood_free": ["海鲜过敏", "不吃海鲜", "对海鲜过敏", "海鲜过敏", "不能吃海鲜"]
         }
         
         for restriction, patterns in restriction_patterns.items():
@@ -176,6 +212,8 @@ class AIService:
                 "emotion_history": [],
                 "entity_history": []
             }
+            # 保存新会话
+            self._save_sessions()
         else:
             # 更新最后活动时间
             self.user_sessions[session_id]["last_activity"] = datetime.now()
@@ -232,16 +270,44 @@ class AIService:
             preferences["occasion"] = "business"
         
         session["user_preferences"] = preferences
+        # 保存更新的会话数据
+        self._save_sessions()
 
     def _build_conversation_context(self, session_id: str) -> str:
         """构建对话上下文（增强版）"""
         session = self.user_sessions[session_id]
         context = self.system_prompt
         
+        # 添加菜单信息
+        menu_items = self.menu_service.get_all_menu_items()
+        context += f"\n\n菜单信息：我们共有{len(menu_items)}道菜品，包括：\n"
+        
+        # 按类别组织菜单
+        categories = {}
+        for item in menu_items:
+            if item.category not in categories:
+                categories[item.category] = []
+            categories[item.category].append(item)
+        
+        for category, items in categories.items():
+            context += f"- {category}：{', '.join([f'{item.name}(¥{item.price})' for item in items[:3]])}"
+            if len(items) > 3:
+                context += f"等{len(items)}道菜"
+            context += "\n"
+        
         # 添加用户偏好信息
         preferences = session.get("user_preferences", {})
         if preferences:
             context += f"\n\n用户偏好信息：{json.dumps(preferences, ensure_ascii=False)}"
+        
+        # 添加对话历史摘要
+        history = session.get("conversation_history", [])
+        if history:
+            context += f"\n\n对话历史摘要（最近{min(5, len(history)//2)}轮对话）：\n"
+            recent_history = history[-10:]  # 最近10条消息
+            for msg in recent_history:
+                role = "用户" if msg["role"] == "user" else "助手"
+                context += f"- {role}: {msg['content'][:100]}{'...' if len(msg['content']) > 100 else ''}\n"
         
         # 添加意图历史
         intent_history = session.get("intent_history", [])
@@ -334,8 +400,11 @@ class AIService:
                 "timestamp": datetime.now().isoformat()
             })
             
-            # 更新用户偏好
+                        # 更新用户偏好
             self._update_user_preferences(session_id, message, response.content, entities)
+            
+            # 保存会话数据
+            self._save_sessions()
             
             # 解析回复，提取推荐信息
             recommendations = self._extract_recommendations(response.content)
@@ -396,38 +465,119 @@ class AIService:
 
     def _get_recommendation_response(self, preferences: Dict[str, Any], entities: Dict[str, Any], emotion_scores: Dict[str, float]) -> str:
         """获取推荐回复"""
-        response_parts = []
+        response = "根据您的偏好，我为您推荐以下菜单中的菜品：\n\n"
         
-        # 根据菜系偏好
-        if entities.get("cuisine_types"):
-            cuisines = entities["cuisine_types"]
-            if "chinese" in cuisines:
-                response_parts.append("中餐推荐：麻婆豆腐、宫保鸡丁、水煮鱼")
-            if "western" in cuisines:
-                response_parts.append("西餐推荐：意大利面、牛排、披萨")
-            if "japanese" in cuisines:
-                response_parts.append("日料推荐：三文鱼刺身、天妇罗、拉面")
+        # 基于口味偏好推荐
+        taste_preferences = preferences.get("taste_preferences", [])
+        if taste_preferences:
+            response += f"考虑到您喜欢{taste_preferences[0]}口味，"
         
-        # 根据口味偏好
-        if entities.get("taste_preferences"):
-            tastes = entities["taste_preferences"]
-            if "spicy" in tastes:
-                response_parts.append("重口味推荐：辣子鸡、水煮鱼、麻婆豆腐")
-            if "mild" in tastes:
-                response_parts.append("清淡推荐：白切鸡、蒸蛋羹、清炒时蔬")
+        # 基于菜系偏好推荐
+        cuisine_preferences = preferences.get("cuisine_preferences", [])
+        if cuisine_preferences:
+            response += f"以及您偏好{cuisine_preferences[0]}菜系，"
         
-        # 根据预算
-        if entities.get("budget_range"):
-            budget = entities["budget_range"]
-            if budget == "low":
-                response_parts.append("经济实惠推荐：家常菜、小炒、汤品")
-            elif budget == "high":
-                response_parts.append("高档精致推荐：海鲜、牛排、特色菜")
+        # 基于预算推荐
+        budget = preferences.get("budget_preference")
+        if budget:
+            response += f"在您的预算范围内，"
         
-        if response_parts:
-            return "根据您的偏好，" + "；".join(response_parts) + "。您更倾向于哪种？"
+        # 基于健康需求推荐
+        health_concerns = preferences.get("health_concerns", [])
+        if health_concerns:
+            response += f"考虑到您的健康需求，"
+        
+        # 基于过敏原推荐
+        dietary_restrictions = preferences.get("dietary_restrictions", [])
+        if dietary_restrictions:
+            response += f"避开您的过敏原，"
+        
+        response += "我推荐：\n"
+        
+        # 从菜单中筛选推荐菜品
+        recommended_items = self._get_menu_recommendations(preferences, entities)
+        
+        for i, item in enumerate(recommended_items, 1):
+            response += f"{i}. {item.name} - ¥{item.price}\n"
+            response += f"   {item.description}\n"
+            if item.rating:
+                response += f"   评分：{item.rating}/5.0\n"
+            response += "\n"
+        
+        if not recommended_items:
+            response += "抱歉，暂时没有找到完全符合您偏好的菜品。您可以尝试调整一下偏好，或者告诉我您想要什么类型的菜品？\n"
         else:
-            return "我推荐您尝试：1. 当季新鲜菜品 2. 经典招牌菜 3. 营养均衡搭配。您有什么特别偏好吗？"
+            response += "这些菜品都符合您的口味偏好，营养搭配合理。您觉得怎么样？"
+        
+        return response
+    
+    def _get_menu_recommendations(self, preferences: Dict[str, Any], entities: Dict[str, Any], limit: int = 5) -> List[Any]:
+        """根据用户偏好从菜单中筛选推荐菜品"""
+        all_items = self.menu_service.get_all_menu_items()
+        recommended_items = []
+        
+        # 提取用户偏好
+        taste_preferences = preferences.get("taste_preferences", [])
+        cuisine_preferences = preferences.get("cuisine_preferences", [])
+        dietary_restrictions = preferences.get("dietary_restrictions", [])
+        budget_preference = preferences.get("budget_preference")
+        health_concerns = preferences.get("health_concerns", [])
+        
+        # 从实体中提取信息
+        extracted_taste = entities.get("taste_preferences", [])
+        extracted_cuisine = entities.get("cuisine_types", [])
+        extracted_budget = entities.get("budget_range")
+        
+        # 合并偏好
+        all_tastes = taste_preferences + extracted_taste
+        all_cuisines = cuisine_preferences + extracted_cuisine
+        all_budget = budget_preference or extracted_budget
+        
+        for item in all_items:
+            score = 0
+            
+            # 口味匹配
+            if all_tastes:
+                for taste in all_tastes:
+                    if taste in item.description.lower() or taste in item.name.lower():
+                        score += 2
+            
+            # 菜系匹配
+            if all_cuisines:
+                for cuisine in all_cuisines:
+                    if cuisine in item.category or cuisine in item.description.lower():
+                        score += 3
+            
+            # 预算匹配
+            if all_budget:
+                if "便宜" in all_budget and item.price <= 30:
+                    score += 2
+                elif "中等" in all_budget and 30 < item.price <= 60:
+                    score += 2
+                elif "高档" in all_budget and item.price > 60:
+                    score += 2
+            
+            # 健康需求匹配
+            if health_concerns:
+                if "清淡" in health_concerns and "清蒸" in item.description:
+                    score += 2
+                elif "营养" in health_concerns and "蔬菜" in item.description:
+                    score += 2
+            
+            # 过敏原过滤
+            if dietary_restrictions:
+                if any(allergen in item.allergens for allergen in dietary_restrictions):
+                    continue  # 跳过过敏菜品
+            
+            # 评分加成
+            score += item.rating * 0.5
+            
+            if score > 0:
+                recommended_items.append((item, score))
+        
+        # 按评分排序并返回前N个
+        recommended_items.sort(key=lambda x: x[1], reverse=True)
+        return [item for item, score in recommended_items[:limit]]
 
     def _get_information_response(self, message: str, preferences: Dict[str, Any]) -> str:
         """获取信息回复"""

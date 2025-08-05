@@ -5,11 +5,9 @@ services:
     build: .
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - PINECONE_API_KEY=${PINECONE_API_KEY}
-      - PINECONE_ENVIRONMENT=${PINECONE_ENVIRONMENT}
-      - PINECONE_INDEX_NAME=${PINECONE_INDEX_NAME}
       - APP_NAME=AI餐厅推荐系统
       - DEBUG=False
     volumes:

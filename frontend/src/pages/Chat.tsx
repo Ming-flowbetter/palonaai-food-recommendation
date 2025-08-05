@@ -34,6 +34,12 @@ interface ConversationMetrics {
 }
 
 const Chat: React.FC = () => {
+  // 从本地存储恢复会话ID
+  const [sessionId, setSessionId] = useState<string>(() => {
+    const savedSessionId = localStorage.getItem('chat_session_id');
+    return savedSessionId || '';
+  });
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -44,13 +50,21 @@ const Chat: React.FC = () => {
   ]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionId, setSessionId] = useState<string>('');
   const [sessionInfo, setSessionInfo] = useState<SessionInfo | null>(null);
   const [showSessionInfo, setShowSessionInfo] = useState(false);
   const [showMetrics, setShowMetrics] = useState(false);
   const [metrics, setMetrics] = useState<ConversationMetrics | null>(null);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // 保存会话ID到本地存储
+  useEffect(() => {
+    if (sessionId) {
+      localStorage.setItem('chat_session_id', sessionId);
+    } else {
+      localStorage.removeItem('chat_session_id');
+    }
+  }, [sessionId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -75,6 +89,7 @@ const Chat: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // 传递当前的sessionId给API
       const response = await chatWithAI(inputText, sessionId);
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -133,6 +148,8 @@ const Chat: React.FC = () => {
     setSessionId('');
     setSessionInfo(null);
     setMetrics(null);
+    // 清除本地存储的会话ID
+    localStorage.removeItem('chat_session_id');
   };
 
   const handleFeedback = async (messageId: string, rating: number, feedbackType: string) => {
@@ -251,6 +268,19 @@ const Chat: React.FC = () => {
               {Object.keys(sessionInfo.user_preferences).length > 0 && (
                 <p>用户偏好: {formatPreferences(sessionInfo.user_preferences)}</p>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* 会话状态显示 */}
+        {sessionId && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <Info className="h-4 w-4 text-blue-500" />
+              <span className="text-sm text-blue-700">
+                会话已连接 (ID: {sessionId.substring(0, 8)}...)
+                {sessionInfo && ` • 对话长度: ${sessionInfo.conversation_length} • 交互次数: ${sessionInfo.interaction_count}`}
+              </span>
             </div>
           </div>
         )}
